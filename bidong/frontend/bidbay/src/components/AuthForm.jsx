@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import api from "../api";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import "../styles/Form.css";
@@ -11,31 +10,24 @@ function Form({ route, method }) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  // const currentRoute = route;
 
-  const name = method === "login" ? "Login" : "Register";
+  const name = method === "login" ? "Login" : "Signup";
 
-  const handleUserName = (e) => {
-    setUsername(e.target.value)
-}
-const handlePass = (e) => {
-    setPassword(e.target.value)
-}
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:8000/api/user/regiter/", {
-        username,
-        password,
-      });
-      console.log('this is the post register');
-      console.log(res.status);
+      const res = await api.post(route, { username, password });
       if (method === "login") {
         localStorage.setItem(ACCESS_TOKEN, res.data.access);
         localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-        navigate("/");
+        navigate("/profile");
+        console.log(
+          "this is the aToken + Refesh",
+          res.data.access,
+          REFRESH_TOKEN
+        );
       } else {
         navigate("/login");
       }
@@ -45,9 +37,6 @@ const handlePass = (e) => {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    console.log(username, password);
-  }, [])
 
   return (
     <form onSubmit={handleSubmit} className="form-container">
@@ -56,14 +45,14 @@ const handlePass = (e) => {
         className="form-input"
         type="text"
         value={username}
-        onChange={handleUserName}
+        onChange={(e) => setUsername(e.target.value)}
         placeholder="Username"
       />
       <input
         className="form-input"
         type="password"
         value={password}
-        onChange={handlePass}
+        onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
       />
       {loading && <LoadingIndicator />}
