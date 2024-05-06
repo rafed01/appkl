@@ -54,6 +54,19 @@ class Bid(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.amount}"
+
+
+class UserInfo(models.Model):
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    phone = models.BigIntegerField
+    fullname = models.CharField(max_length=100)
+    adress = models.CharField(max_length=200)
+    email = models.CharField(max_length=200)
+
+    class Meta:
+        unique_together = ('username', 'fullname')
+
+   
     
 
 

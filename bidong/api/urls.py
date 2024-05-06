@@ -10,6 +10,7 @@ router.register(r'items', views.ItemViewSet)
 router.register(r'bids', views.BidViewSet)
 router.register(r'item-images', views.ItemImageViewSet)  # Register the ItemImage view set
 router.register(r'categories', views.CategoryViewSet)
+router.register(r'userinfo', views.UserInfoViewset)
 
 urlpatterns = [
     path('', include(router.urls)),
