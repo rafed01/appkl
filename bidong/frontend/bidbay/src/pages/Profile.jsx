@@ -1,17 +1,20 @@
-import HomeButton from "../components/HomeButton";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import api from "../api";
+import { getUserId } from "../components/UserAuth";
 
 function Profile() {
+  const user_id = getUserId();
+  console.log(user_id);
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [startprice, setStartprice] = useState();
+  const [startprice, setStartprice] = useState("");
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
     // Fetch categories from the backend API
-    api.get("/api/categories")
+    api
+      .get("/api/categories")
       .then((res) => {
         setCategories(res.data);
       })
@@ -24,19 +27,23 @@ function Profile() {
       .post("/api/items/", {
         name: name,
         description: description,
-        startprice: startprice,
-        category: selectedCategory
+        startprice: parseInt(startprice),
+        creator: user_id,
       })
       .then((res) => {
-        if (res.status === 201) alert("Item Submitted!");
-        else alert("Failed to submit item");
+        if (res.status === 201) {
+          alert("Item Submitted!");
+        } else {
+          alert("Failed to submit item");
+        }
       })
-      .catch((err) => alert(err));
+      .catch((err) => {
+        alert("Error submitting item: " + err);
+      });
   };
 
   return (
     <div>
-      <HomeButton />
       <h1>Profile page</h1>
       <h2>Post Item for review</h2>
       <form onSubmit={createItem}>
@@ -73,23 +80,7 @@ function Profile() {
           placeholder="00"
         />
         <br />
-        <label htmlFor="category">Select Category</label>
-        <br />
-        <select
-          id="category"
-          name="category"
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          value={selectedCategory}
-        >
-          <option value="">Select a category</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-        <br />
-        <button className="form-button" type="submit">
+        <button className="" type="submit">
           Submit Item
         </button>
       </form>

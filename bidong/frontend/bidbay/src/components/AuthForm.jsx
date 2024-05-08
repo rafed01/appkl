@@ -1,9 +1,11 @@
 import { useState } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
+import { ACCESS_TOKEN, REFRESH_TOKEN, CURRENT_USER } from "../constants";
 import "../styles/Form.css";
 import LoadingIndicator from "./LoadingIndicator";
+import { saveCurrentUser, getCurrentUser, getUserId } from "./UserAuth";
+import { jwtDecode } from "jwt-decode";
 
 function Form({ route, method }) {
   const [username, setUsername] = useState("");
@@ -22,11 +24,16 @@ function Form({ route, method }) {
       if (method === "login") {
         localStorage.setItem(ACCESS_TOKEN, res.data.access);
         localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+        // Decode the JWT token to get user information
+        const decodedToken = jwtDecode(res.data.access);
+        saveCurrentUser(decodedToken); // Save the decoded user information
         navigate("/profile");
+        getUserId();
+        // console.log("Current User:", decodedToken); // Log the current user information
         console.log(
           "this is the aToken + Refesh",
           res.data.access,
-          REFRESH_TOKEN
+          res.data.refresh
         );
       } else {
         navigate("/login");
@@ -37,6 +44,8 @@ function Form({ route, method }) {
       setLoading(false);
     }
   };
+
+   
 
   return (
     <form onSubmit={handleSubmit} className="form-container">

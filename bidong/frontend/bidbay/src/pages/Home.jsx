@@ -1,27 +1,20 @@
 // Home.js
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import backgroundImage from "./images/home.jpg";
+import Navbar from "../components/Navbar/Navbar";
+import About from "../components/About/About";
+import Contact from "../components/Contact/Contact";
+import Footer from "../components/Footer/Footer";
 
 const Home = () => {
-  const navigate = useNavigate();
-  const loginButt = () => {
-    navigate("/login");
-  };
-
-  const signupButt = () => {
-    navigate("/signup");
-  };
   return (
-    <div>
-      <h2>Welcome to the Homepage</h2>{" "}
-      <button className="form-button" onClick={loginButt}>
-        Login
-      </button>
-      <button className="form-button" onClick={signupButt}>
-        Signup
-      </button>
+    <div id="home">
+      <About />
+      <Contact />
+      <Footer />
     </div>
   );
 };
 
-export default Home;
+export default Home

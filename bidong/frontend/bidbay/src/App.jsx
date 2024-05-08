@@ -12,6 +12,12 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import "./index.css";
+import Navbar from "./components/Navbar/Navbar";
+import About from "./components/About/About";
+import Contact from "./components/Contact/Contact";
+import Bids from "./components/Bids/Bids";
+import Footer from "./components/Footer/Footer";
 
 function Logout() {
   localStorage.clear();
@@ -27,10 +33,15 @@ const App = () => {
   return (
     <Router>
       <div>
+        <Navbar />
+        
         <Routes>
           <Route path="/signup" element={<SingnupAndLogout />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/bids" element={<Bids />} />
+          <Route path="/contact" element={<Contact />} />
           <Route exact path="/" element={<Home />} />
           <Route path="*" element={<NotFound />} />
           <Route
