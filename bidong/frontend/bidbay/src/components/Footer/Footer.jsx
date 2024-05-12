@@ -12,9 +12,7 @@ const Footer = () => {
             unique treasures, we've got you covered.
           </p>
           <p>
-            Explore our auctions to find rare collectibles, art pieces, vintage
-            items, electronics, and much more. Register for free to start
-            bidding and selling today!
+            
           </p>
         </div>
         <hr />
