@@ -27,7 +27,7 @@ function Form({ route, method }) {
         // Decode the JWT token to get user information
         const decodedToken = jwtDecode(res.data.access);
         saveCurrentUser(decodedToken); // Save the decoded user information
-        navigate("/profile");
+        navigate("/bids");
         getUserId();
         // console.log("Current User:", decodedToken); // Log the current user information
         console.log(
@@ -45,8 +45,6 @@ function Form({ route, method }) {
     }
   };
 
-   
-
   return (
     <form onSubmit={handleSubmit} className="form-container">
       <h1>{name}</h1>
@@ -57,7 +55,7 @@ function Form({ route, method }) {
         onChange={(e) => setUsername(e.target.value)}
         placeholder="Username"
       />
-      
+
       <input
         className="form-input"
         type="password"

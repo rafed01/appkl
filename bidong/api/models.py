@@ -19,10 +19,7 @@ class Item(models.Model):
     description = models.TextField()
     starting_price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
-    # category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='items')  # Add category relationship
-
-
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, default=10)
 
     def __str__(self):
         return self.name
@@ -36,17 +33,20 @@ class ItemImage(models.Model):
         return f"Image for {self.item.name}"
 
 class Bid(models.Model):
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    bid_name = models.CharField(max_length=100, default="bidName")
+    bid_description = models.TextField(default="item description")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        # Add any additional options or constraints for the Bid model
-        unique_together = ('user', 'item')
+    bid_image1 = models.ImageField(upload_to='bid_images/', default=None, null=True)
+    bid_image2 = models.ImageField(upload_to='bid_images/', default=None, null=True)
+    bid_image3 = models.ImageField(upload_to='bid_images/', default=None, null=True)
+    bid_image4 = models.ImageField(upload_to='bid_images/', default=None, null=True)
+    bid_image5 = models.ImageField(upload_to='bid_images/', default=None, null=True)
+    starting_price = models.DecimalField(max_digits=10, decimal_places=3, default=0)
+    bid_category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='bids', null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.amount}"
+        return f"{self.bid_name}"
 
 
 class UserInfo(models.Model):

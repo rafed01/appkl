@@ -1,79 +1,57 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import api from "../api";
 import "./Bids.css";
-import mercedes from "../pages/images/mercedes.jpg";
-import SingleProduct from "../pages/SingleProduct";
+// Import any necessary images
 
 const Bids = () => {
-  const bids = [
-    {
-      id: 1,
-      itemName: "MERCEDES CLASSE G IV",
-      currentBid: 139.9,
-      category: "Cars",
-      imageUrl: "path/to/image1.jpg",
-    },
-    {
-      id: 2,
-      itemName: "Item 2",
-      currentBid: 75,
-      category: "Divers",
-      imageUrl: "path/to/image2.jpg",
-    },
-    {
-      id: 3,
-      itemName: "Item 3",
-      currentBid: 100,
-      category: "Houses",
-      imageUrl: "path/to/image3.jpg",
-    },
-    // Add more items to fill the grid
-    {
-      id: 4,
-      itemName: "Item 4",
-      currentBid: 120,
-      category: "Electro",
-      imageUrl: "path/to/image4.jpg",
-    },
-    {
-      id: 5,
-      itemName: "Item 5",
-      currentBid: 150,
-      category: "Cars",
-      imageUrl: "path/to/image5.jpg",
-    },
-    {
-      id: 6,
-      itemName: "Item 6",
-      currentBid: 90,
-      category: "Divers",
-      imageUrl: "path/to/image6.jpg",
-    },
-    {
-      id: 7,
-      itemName: "Item 7",
-      currentBid: 80,
-      category: "Houses",
-      imageUrl: "path/to/image7.jpg",
-    },
-    {
-      id: 8,
-      itemName: "Item 8",
-      currentBid: 110,
-      category: "Electro",
-      imageUrl: "path/to/image8.jpg",
-    },
-    {
-      id: 9,
-      itemName: "Item 9",
-      currentBid: 130,
-      category: "Cars",
-      imageUrl: "path/to/image9.jpg",
-    },
-  ];
-  const viewProduct = (productId) => {
-    // Implement the logic to navigate to the single product page using React Router
-    console.log("View Product:", productId);
+  const [bids, setBids] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  useEffect(() => {
+    fetchBids();
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await api.get("/api/categories/");
+      setCategories(res.data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
   };
+
+  const fetchBids = async () => {
+    try {
+      const response = await api.get("/api/bids/");
+      setBids(response.data); // Assuming response.data is an array of bid objects
+    } catch (error) {
+      console.error("Error fetching bids:", error);
+    }
+  };
+
+  const getCategoryName = (categoryId) => {
+    const category = categories.find((cat) => cat.id === categoryId);
+    return category ? category.name : "";
+  };
+
+  const viewProduct = (id) => {
+    // Implement the logic to navigate to the single product page using React Router
+    alert("View Product:" + id);
+  };
+
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategory(categoryId);
+  };
+
+  const handleResetFilter = () => {
+    setSelectedCategory(null);
+  };
+
+  const filteredBids = selectedCategory
+    ? bids.filter((bid) => bid.bid_category === selectedCategory)
+    : bids;
 
   return (
     <div className="container">
@@ -81,29 +59,32 @@ const Bids = () => {
         <div className="filter-card">
           <h3 className="filter-title">Shop By Categories</h3>
           <ul className="ps-0">
-            <li>Cars</li>
-            <li>Divers</li>
-            <li>Houses</li>
-            <li>Electro</li>
+            <li onClick={handleResetFilter}>All</li>
+            {categories.map((category) => (
+              <li key={category.id} onClick={() => handleCategoryClick(category.id)}>
+                {category.name}
+              </li>
+            ))}
           </ul>
         </div>
         <div className="bids-list">
-          {bids.map((bid) => (
+          {filteredBids.map((bid) => (
             <div key={bid.id} className="bid-item">
-              <img src={mercedes} alt={bid.itemName} className="img-fluid" />
-              <h2>{bid.itemName}</h2>
-              <p>Category: {bid.category}</p>
-              <p>Current Bid: ${bid.currentBid}</p>
+              {/* Replace the img src with the actual bid image */}
+              <img src={bid.bid_image1} alt={bid.bid_name} className="img-fluid" />
+              <h2>{bid.bid_name}</h2>
+              <p>Description: {bid.bid_description}</p>
+              <p>Starting Price: ${bid.starting_price}</p>
+              <p>Category: {getCategoryName(bid.bid_category)}</p>
               {/* Additional content for each bid */}
               <div className="bid-item">
                 {/* Other bid item content */}
-                <button id="SingleProduct"
+                <button
                   className="view-product-btn"
                   onClick={() => viewProduct(bid.id)}
                 >
                   View Product
                 </button>
-                
               </div>
             </div>
           ))}

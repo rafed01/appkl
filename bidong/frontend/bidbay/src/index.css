@@ -145,3 +145,7 @@ font-family: Outfit;
   transform: scale(1.1);
   transition: 0.3s;
 }
+
+.checkbox{
+  display: inline-flex;
+}

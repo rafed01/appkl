@@ -1,23 +1,28 @@
 import React, { useState } from "react";
 import api from "../api";
-import { getUserId } from "../components/UserAuth";
 import "../index.css";
 
 function Profile() {
-  const user_id = getUserId();
   
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [starting_price, setStarting_price] = useState("");
+  const [agreeChecked, setAgreeChecked] = useState(false);
+
+  
 
   const createItem = (e) => {
     e.preventDefault();
+    if (!agreeChecked) {
+      alert("Please agree to the terms before submitting.");
+      return;
+    }
     api
       .post("/api/items/", {
         name: name,
         description: description,
         starting_price: parseInt(starting_price),
-        creator: user_id,
+       
       })
       .then((res) => {
         if (res.status === 201) {
@@ -73,6 +78,16 @@ function Profile() {
           <button className="" type="submit">
             Submit Item
           </button>
+          <div className="checkbox">
+            <input
+              type="checkbox"
+              id="agree"
+              name="agree"
+              checked={agreeChecked}
+              onChange={(e) => setAgreeChecked(e.target.checked)}
+            />
+            <label htmlFor="agree">Agree to send images and location separately to our email</label>
+          </div>
         </form>
       </div>
       <div className="profile_right">
