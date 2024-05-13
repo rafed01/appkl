@@ -25,7 +25,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
-    permission_classes = []
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)

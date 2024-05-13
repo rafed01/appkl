@@ -123,14 +123,15 @@ function Profile() {
             <input type="text" className="form-control" id="inputCity" />
           </div>
           <div className="col-md-4">
-            <label for="inputState" className="form-label">
-              State
-            </label>
-            <select id="inputState" className="form-select">
-              <option selected>Choose...</option>
-              <option>Tunis</option>
-            </select>
-          </div>
+  <label htmlFor="inputState" className="form-label">
+    State
+  </label>
+  <select id="inputState" className="form-select" value="Tunis">
+    <option defaultValue>Choose...</option>
+    <option value="Tunis">Tunis</option>
+  </select>
+</div>
+
           <div className="col-md-2">
             <label for="inputZip" className="form-label">
               Zip

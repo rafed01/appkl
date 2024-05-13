@@ -19,17 +19,10 @@ class Item(models.Model):
     description = models.TextField()
     starting_price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
-    end_time = models.DateTimeField(default=default_end_time)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='items')  # Add category relationship
+    # category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='items')  # Add category relationship
 
-    def save(self, *args, **kwargs):
-        # Calculate the end_time if not set
-        if not self.end_time:
-            self.end_time = self.created_at + timedelta(days=7)
 
-        # Save the instance
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -49,7 +42,7 @@ class Bid(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        # Add a unique constraint on the combination of user and item
+        # Add any additional options or constraints for the Bid model
         unique_together = ('user', 'item')
 
     def __str__(self):
@@ -65,9 +58,6 @@ class UserInfo(models.Model):
 
     class Meta:
         unique_together = ('username', 'fullname')
-
-   
-    
 
 
     
