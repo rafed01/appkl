@@ -16,7 +16,7 @@ import "./index.css";
 import Navbar from "./components/Navbar/Navbar";
 import About from "./components/About/About";
 import Contact from "./components/Contact/Contact";
-import Bids from "./components/Bids/Bids";
+import Bids from "./Bids/Bids";
 import Footer from "./components/Footer/Footer";
 import SingleProduct from "./pages/SingleProduct";
 function Logout() {

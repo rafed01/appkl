@@ -1,7 +1,7 @@
 import React from "react";
 import "./Bids.css";
-import mercedes from "../../pages/images/mercedes.jpg";
-import SingleProduct from "../../pages/SingleProduct";
+import mercedes from "../pages/images/mercedes.jpg";
+import SingleProduct from "../pages/SingleProduct";
 
 const Bids = () => {
   const bids = [

@@ -1,26 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import api from "../api";
 import { getUserId } from "../components/UserAuth";
 import "../index.css";
 
 function Profile() {
   const user_id = getUserId();
-  console.log(user_id);
-
+  
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [startprice, setStartprice] = useState("");
-  const [categories, setCategories] = useState([]);
-
-  useEffect(() => {
-    // Fetch categories from the backend API
-    api
-      .get("/api/categories")
-      .then((res) => {
-        setCategories(res.data);
-      })
-      .catch((err) => console.error(err));
-  }, []);
+  const [starting_price, setStarting_price] = useState("");
 
   const createItem = (e) => {
     e.preventDefault();
@@ -28,7 +16,7 @@ function Profile() {
       .post("/api/items/", {
         name: name,
         description: description,
-        startprice: parseInt(startprice),
+        starting_price: parseInt(starting_price),
         creator: user_id,
       })
       .then((res) => {
@@ -45,117 +33,119 @@ function Profile() {
 
   return (
     <div className="profile-container">
-
-    <div className="profile_left">
-      <h1>Profile page</h1>
-      <h2>Post Item for review</h2>
-      <form onSubmit={createItem}>
-        <label htmlFor="name">Item Name</label>
-        <br />
-        <input
-          type="text"
-          id="name"
-          name="name"
-          onChange={(e) => setName(e.target.value)}
-          value={name}
-          placeholder="Type item name"
-        />
-        <br />
-        <label htmlFor="description">Item description</label>
-        <br />
-        <input
-          type="text"
-          id="description"
-          name="description"
-          onChange={(e) => setDescription(e.target.value)}
-          value={description}
-          placeholder="Item description"
-        />
-        <br />
-        <label htmlFor="startprice">Starting price</label>
-        <br />
-        <input
-          type="number"
-          id="startprice"
-          name="startprice"
-          onChange={(e) => setStartprice(e.target.value)}
-          value={startprice}
-          placeholder="00"
-        />
-        <br />
-        <button className="" type="submit">
-          Submit Item
-        </button>
-      </form>
-      
+      <div className="profile_left">
+        <h1>Profile page</h1>
+        <h2>Post Item for review</h2>
+        <form onSubmit={createItem}>
+          <label htmlFor="name">Item Name</label>
+          <br />
+          <input
+            type="text"
+            id="name"
+            name="name"
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+            placeholder="Type item name"
+          />
+          <br />
+          <label htmlFor="description">Item description</label>
+          <br />
+          <input
+            type="text"
+            id="description"
+            name="description"
+            onChange={(e) => setDescription(e.target.value)}
+            value={description}
+            placeholder="Item description"
+          />
+          <br />
+          <label htmlFor="starting_price">Starting price</label>
+          <br />
+          <input
+            type="number"
+            id="starting_price"
+            name="starting_price"
+            onChange={(e) => setStarting_price(e.target.value)}
+            value={starting_price}
+            placeholder="00"
+          />
+          <br />
+          <button className="" type="submit">
+            Submit Item
+          </button>
+        </form>
       </div>
       <div className="profile_right">
-        <form class="row g-3">
-          <div class="col-md-6">
-            <label for="inputEmail4" class="form-label">
+        <form className="row g-3">
+          <div className="col-md-6">
+            <label for="inputEmail4" className="form-label">
               Email
             </label>
-            <input type="email" class="form-control" id="inputEmail4" />
+            <input type="email" className="form-control" id="inputEmail4" />
           </div>
-          <div class="col-md-6">
-            <label for="inputPassword4" class="form-label">
+          <div className="col-md-6">
+            <label for="inputPassword4" className="form-label">
               Password
             </label>
-            <input type="password" class="form-control" id="inputPassword4" />
+            <input
+              type="password"
+              className="form-control"
+              id="inputPassword4"
+            />
           </div>
-          <div class="col-12">
-            <label for="inputAddress" class="form-label">
+          <div className="col-12">
+            <label for="inputAddress" className="form-label">
               Address
             </label>
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               id="inputAddress"
               placeholder="1234 Main St"
             />
           </div>
-          <div class="col-12">
-          <label htmlFor="inputPhone" className="form-label">Phone Number</label>
-           
+          <div className="col-12">
+            <label htmlFor="inputPhone" className="form-label">
+              Phone Number
+            </label>
+
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               id="inputPhone"
               placeholder=""
-
             />
           </div>
-          <div class="col-md-6">
-            <label for="inputCity" class="form-label">
+          <div className="col-md-6">
+            <label for="inputCity" className="form-label">
               City
             </label>
-            <input type="text" class="form-control" id="inputCity" />
+            <input type="text" className="form-control" id="inputCity" />
           </div>
-          <div class="col-md-4">
-            <label for="inputState" class="form-label">
+          <div className="col-md-4">
+            <label for="inputState" className="form-label">
               State
             </label>
-            <select id="inputState" class="form-select">
+            <select id="inputState" className="form-select">
               <option selected>Choose...</option>
-              <option>...</option>
+              <option>Tunis</option>
             </select>
           </div>
-          <div class="col-md-2">
-            <label for="inputZip" class="form-label">
+          <div className="col-md-2">
+            <label for="inputZip" className="form-label">
               Zip
             </label>
-            <input type="text" class="form-control" id="inputZip" />
+            <input type="text" className="form-control" id="inputZip" />
           </div>
-          
-          <div class="col-12">
-            <button type="submit" class="btn btn-primary">
+
+          <div className="col-12">
+            <button type="submit" className="btn btn-primary">
               Submit
             </button>
           </div>
         </form>
       </div>
-      </div>
-
+    </div>
   );
 }
 

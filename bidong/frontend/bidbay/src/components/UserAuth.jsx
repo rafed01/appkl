@@ -19,6 +19,6 @@ export const removeCurrentUser = () => {
 export const getUserId = async (e) => {
     const usernow = getCurrentUser();
     const userid = usernow.user_id;
-    console.log("current user =", userid);
+    // console.log("current user =", userid);
     return userid;
   };
