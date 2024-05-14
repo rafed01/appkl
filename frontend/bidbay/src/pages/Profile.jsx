@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import api from "../api";
 import "../index.css";
+import { getUserId } from "../components/UserAuth";
 
 function Profile() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [starting_price, setStarting_price] = useState("");
   const [agreeChecked, setAgreeChecked] = useState(false);
+  const userId = getUserId();
 
   const [formData, setFormData] = useState({
     phone: "",
@@ -17,6 +19,8 @@ function Profile() {
     zip: "",
     state: "",
   });
+
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,7 +41,7 @@ function Profile() {
       }
     } catch (error) {
       console.error("Error submitting user info:", error);
-      alert("Error submitting user info");
+      alert("Error submitting user info" + error);
     }
   };
 

@@ -46,10 +46,8 @@ const App = () => {
           <Route
             path="/bids"
             element={
-              <ProtectedRoute>
-                {" "}
-                <Bids />{" "}
-              </ProtectedRoute>
+             
+                <Bids />
             }
           />
           <Route path="/contact" element={<Contact />} />
