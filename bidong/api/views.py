@@ -54,11 +54,13 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class UserInfoViewset(viewsets.ModelViewSet):
     queryset = UserInfo.objects.all()
     serializer_class = UserInfoSerializer
-    permission_classes = []
+
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
     
 
 
 class ContactViewSet(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
-    permission_classes = [AllowAny]
+    permission_classes = []

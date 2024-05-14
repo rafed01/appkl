@@ -19,7 +19,7 @@ class Item(models.Model):
     description = models.TextField()
     starting_price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, default=10)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
 
     def __str__(self):
         return self.name
@@ -50,7 +50,7 @@ class Bid(models.Model):
 
 
 class UserInfo(models.Model):
-    username = models.ForeignKey(User, on_delete=models.CASCADE, default=10)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     phone = models.CharField(max_length=50, default="+216")
     fullname = models.CharField(max_length=100, default="flen ben foulen")
     adress = models.CharField(max_length=200, default="home sweet home")
@@ -60,7 +60,7 @@ class UserInfo(models.Model):
     state = models.CharField(max_length=50, default="state affairs XD")
 
     def __str__(self):
-         return f"{self.username}"
+         return f"{self.fullname}"
 
 class Contact(models.Model):
     c_name = models.CharField(default="flen ben foulen", max_length=50)
