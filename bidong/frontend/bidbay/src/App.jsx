@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // src/App.js
 import React from "react";
 import {
@@ -19,6 +20,8 @@ import Contact from "./components/Contact/Contact";
 import Bids from "./Bids/Bids";
 import Footer from "./components/Footer/Footer";
 import SingleProduct from "./pages/SingleProduct";
+import BidDetails from "./pages/BidDeatails";
+
 function Logout() {
   localStorage.clear();
   return <Navigate to="/login" />;
@@ -34,17 +37,24 @@ const App = () => {
     <Router>
       <div>
         <Navbar />
-        
+
         <Routes>
           <Route path="/signup" element={<SingnupAndLogout />} />
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/about" element={<About />} />
-          <Route path="/bids" element={<ProtectedRoute> <Bids /> </ProtectedRoute>} />
+          <Route
+            path="/bids"
+            element={
+              <ProtectedRoute>
+                {" "}
+                <Bids />{" "}
+              </ProtectedRoute>
+            }
+          />
           <Route path="/contact" element={<Contact />} />
           <Route exact path="/" element={<Home />} />
-          <Route exact path="/" component={Bids} />
-          <Route path="/bids/:id" render={(props) => <SingleProduct productId={props.match.params.productId} />} />
+          <Route path="/bids/:id" element={<BidDetails />} />
           <Route path="*" element={<NotFound />} />
           <Route
             path="/profile"
@@ -60,4 +70,4 @@ const App = () => {
   );
 };
 
-export default App
+export default App;

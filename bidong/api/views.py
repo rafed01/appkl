@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
-from .models import Item, Bid, ItemImage, Category, UserInfo
-from .serializers import ItemSerializer, BidSerializer, ItemImageSerializer,CategorySerializer, UserInfoSerializer
+from .models import Item, Bid, ItemImage, Category, UserInfo, Contact
+from .serializers import ItemSerializer, BidSerializer, ItemImageSerializer,CategorySerializer, UserInfoSerializer, ContactSerializer
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -10,6 +10,7 @@ from .serializers import UserSerializer, CustomTokenObtainPairSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -32,7 +33,7 @@ class ItemViewSet(viewsets.ModelViewSet):
 class BidViewSet(viewsets.ModelViewSet):
     queryset = Bid.objects.all()
     serializer_class = BidSerializer
-    permission_classes = [AllowAny]
+    permission_classes = []
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -54,3 +55,10 @@ class UserInfoViewset(viewsets.ModelViewSet):
     queryset = UserInfo.objects.all()
     serializer_class = UserInfoSerializer
     permission_classes = []
+    
+
+
+class ContactViewSet(viewsets.ModelViewSet):
+    queryset = Contact.objects.all()
+    serializer_class = ContactSerializer
+    permission_classes = [AllowAny]

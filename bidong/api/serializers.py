@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Item, Bid, ItemImage, Category, UserInfo
+from .models import Item, Bid, ItemImage, Category, UserInfo, Contact
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -60,4 +60,11 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserInfo
+        fields = '__all__'
+
+
+class ContactSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Contact
         fields = '__all__'

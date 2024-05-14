@@ -50,14 +50,23 @@ class Bid(models.Model):
 
 
 class UserInfo(models.Model):
-    username = models.ForeignKey(User, on_delete=models.CASCADE)
-    phone = models.BigIntegerField
-    fullname = models.CharField(max_length=100)
-    adress = models.CharField(max_length=200)
-    email = models.CharField(max_length=200)
+    username = models.ForeignKey(User, on_delete=models.CASCADE, default=10)
+    phone = models.CharField(max_length=50, default="+216")
+    fullname = models.CharField(max_length=100, default="flen ben foulen")
+    adress = models.CharField(max_length=200, default="home sweet home")
+    city = models.CharField(max_length=100, default="home city")
+    email = models.CharField(max_length=200, default="flen@mailbox")
+    zip = models.CharField(max_length=50, default="1234")
+    state = models.CharField(max_length=50, default="state affairs XD")
 
-    class Meta:
-        unique_together = ('username', 'fullname')
+    def __str__(self):
+         return f"{self.username}"
+
+class Contact(models.Model):
+    c_name = models.CharField(default="flen ben foulen", max_length=50)
+    c_email = models.CharField(default="flen@mailbox", max_length=100)
+    c_message = models.TextField(default="item description")
 
 
-    
+    def __str__(self):
+         return f"{self.c_name}"

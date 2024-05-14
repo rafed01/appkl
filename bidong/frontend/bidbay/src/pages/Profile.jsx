@@ -3,13 +3,43 @@ import api from "../api";
 import "../index.css";
 
 function Profile() {
-  
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [starting_price, setStarting_price] = useState("");
   const [agreeChecked, setAgreeChecked] = useState(false);
 
-  
+  const [formData, setFormData] = useState({
+    phone: "",
+    fullname: "",
+    adress: "",
+    city: "",
+    email: "",
+    zip: "",
+    state: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await api.post("/api/userinfo/", formData);
+      if (response.status === 201) {
+        alert("User info submitted successfully!");
+      } else {
+        alert("Failed to submit user info");
+      }
+    } catch (error) {
+      console.error("Error submitting user info:", error);
+      alert("Error submitting user info");
+    }
+  };
 
   const createItem = (e) => {
     e.preventDefault();
@@ -22,7 +52,6 @@ function Profile() {
         name: name,
         description: description,
         starting_price: parseInt(starting_price),
-       
       })
       .then((res) => {
         if (res.status === 201) {
@@ -86,26 +115,25 @@ function Profile() {
               checked={agreeChecked}
               onChange={(e) => setAgreeChecked(e.target.checked)}
             />
-            <label htmlFor="agree">Agree to send images and location separately to our email</label>
+            <label htmlFor="agree">
+              Agree to send images and location separately to our email
+            </label>
           </div>
         </form>
       </div>
       <div className="profile_right">
-        <form className="row g-3">
+        <form className="row g-3" onSubmit={handleSubmit}>
           <div className="col-md-6">
             <label for="inputEmail4" className="form-label">
               Email
             </label>
-            <input type="email" className="form-control" id="inputEmail4" />
-          </div>
-          <div className="col-md-6">
-            <label for="inputPassword4" className="form-label">
-              Password
-            </label>
             <input
-              type="password"
+              type="email"
               className="form-control"
-              id="inputPassword4"
+              id="inputEmail4"
+              name="email"
+              onChange={handleChange}
+              value={formData.email}
             />
           </div>
           <div className="col-12">
@@ -117,6 +145,23 @@ function Profile() {
               className="form-control"
               id="inputAddress"
               placeholder="1234 Main St"
+              name="adress"
+              onChange={handleChange}
+              value={formData.adress}
+            />
+          </div>
+          <div className="col-12">
+            <label for="inputName" className="form-label">
+              Fullname
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="inputname"
+              placeholder="flen ben foulen"
+              name="fullname"
+              onChange={handleChange}
+              value={formData.fullname}
             />
           </div>
           <div className="col-12">
@@ -128,6 +173,9 @@ function Profile() {
               type="text"
               className="form-control"
               id="inputPhone"
+              name="phone"
+              onChange={handleChange}
+              value={formData.phone}
               placeholder=""
             />
           </div>
@@ -135,23 +183,41 @@ function Profile() {
             <label for="inputCity" className="form-label">
               City
             </label>
-            <input type="text" className="form-control" id="inputCity" />
+            <input
+              type="text"
+              className="form-control"
+              id="inputCity"
+              name="city"
+              onChange={handleChange}
+              value={formData.city}
+            />
           </div>
           <div className="col-md-4">
-  <label htmlFor="inputState" className="form-label">
-    State
-  </label>
-  <select id="inputState" className="form-select" value="Tunis">
-    <option defaultValue>Choose...</option>
-    <option value="Tunis">Tunis</option>
-  </select>
-</div>
+            <label htmlFor="inputState" className="form-label">
+              State
+            </label>
+            <input
+              name="state"
+              onChange={handleChange}
+              value={formData.state}
+              type="text"
+              className="form-control"
+              id="inputState"
+            />
+          </div>
 
           <div className="col-md-2">
             <label for="inputZip" className="form-label">
               Zip
             </label>
-            <input type="text" className="form-control" id="inputZip" />
+            <input
+              name="zip"
+              onChange={handleChange}
+              value={formData.zip}
+              type="text"
+              className="form-control"
+              id="inputZip"
+            />
           </div>
 
           <div className="col-12">

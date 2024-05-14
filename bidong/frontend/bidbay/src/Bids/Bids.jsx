@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../api";
 import "./Bids.css";
+import { Link } from "react-router-dom";
 // Import any necessary images
 
 const Bids = () => {
@@ -79,12 +80,9 @@ const Bids = () => {
               {/* Additional content for each bid */}
               <div className="bid-item">
                 {/* Other bid item content */}
-                <button
-                  className="view-product-btn"
-                  onClick={() => viewProduct(bid.id)}
-                >
-                  View Product
-                </button>
+                <Link to={`/bids/${bid.id}`} className="view-product-btn">
+                View Product
+              </Link>
               </div>
             </div>
           ))}
