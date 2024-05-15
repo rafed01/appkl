@@ -48,6 +48,30 @@ class Bid(models.Model):
     def __str__(self):
         return f"{self.bid_name}"
 
+    def highest_bid(self):
+        highest_bid = self.user_bids.order_by('-amount').first()
+        return highest_bid.amount if highest_bid else None
+
+    def highest_bidder(self):
+        highest_bid = self.user_bids.order_by('-amount').first()
+        if highest_bid:
+            user_info = UserInfo.objects.get(creator=highest_bid.user)
+            return user_info.fullname
+        return None
+
+class UserBid(models.Model):
+    bid = models.ForeignKey(Bid, on_delete=models.CASCADE, related_name='user_bids')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=100, decimal_places=3)
+    placed_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} bid {self.amount} on {self.bid}"
+
+
+
+
+
 
 class UserInfo(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, default=1)

@@ -1,25 +1,80 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api";
-import "../styles/BidDetails.css";  // Adjust the path if necessary
+import "../styles/BidDetails.css"; // Adjust the path if necessary
+import { CURRENT_USER } from "../constants";
+import { getUserId } from "../components/UserAuth";
 
 const BidDetails = () => {
+  const  user = getUserId();
   const { id } = useParams();
   const [bid, setBid] = useState(null);
+  const [categoryName, setCategoryName] = useState("");
+  const [bidAmount, setBidAmount] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+console.log(user);
+  
+
+  
+
 
   useEffect(() => {
     fetchBidDetails();
   }, []);
 
+
   const fetchBidDetails = async () => {
     try {
       const response = await api.get(`/api/bids/${id}`);
-      setBid(response.data);
-      console.log(response.data);
+      const bidData = response.data;
+      setBid(bidData);
+      fetchCategoryName(bidData.bid_category);
+      console.log(bidData);
     } catch (error) {
       console.error("Error fetching bid details:", error);
     }
   };
+
+  const fetchCategoryName = async (categoryId) => {
+    try {
+      const response = await api.get(`/api/categories/${categoryId}`);
+      setCategoryName(response.data.name);
+    } catch (error) {
+      console.error("Error fetching category name:", error);
+    }
+  };
+
+  const handleBid = async () => {
+    try {
+      // Get the user ID from the token
+      const userId = await getUserId();
+      console.log(userId)
+      
+      if (!userId) {
+        console.error('User ID not found in token.');
+        return;
+      }
+  
+      // if (bidAmount <= bid.starting_price) {
+      //   setErrorMessage("Your bid must be higher than the starting price.");
+      //   return;
+      // }
+  
+      const response = await api.post("/api/user-bids/", {
+        bid: bid.id,
+        amount: bidAmount,
+        user: userId,
+      });
+      alert("Bid placed successfully");
+      setBidAmount(""); // Reset the bid amount
+      setErrorMessage(""); // Clear any error messages
+      fetchBidDetails(); // Refresh bid details to update highest bid
+    } catch (error) {
+      console.error("Error placing bid:", error);
+      setErrorMessage("Failed to place bid. Please try again.");
+    }
+  };
+  
 
   return (
     <div className="container">
@@ -27,13 +82,54 @@ const BidDetails = () => {
         <div className="bid-details">
           <h2>{bid.bid_name}</h2>
           <div className="image-carousel">
-            {[bid.bid_image1, bid.bid_image2, bid.bid_image3, bid.bid_image4, bid.bid_image5].map((imageUrl, index) => (
-              imageUrl && <img key={index} src={imageUrl} alt={`Image ${index + 1}`} className="carousel-image" />
-            ))}
+            {[
+              bid.bid_image1,
+              bid.bid_image2,
+              bid.bid_image3,
+              bid.bid_image4,
+              bid.bid_image5,
+            ].map(
+              (imageUrl, index) =>
+                imageUrl && (
+                  <img
+                    key={index}
+                    src={imageUrl}
+                    alt={`Image ${index + 1}`}
+                    className="carousel-image"
+                  />
+                )
+            )}
           </div>
-          <p><strong>Description:</strong> {bid.bid_description}</p>
-          <p><strong>Starting Price:</strong> ${bid.starting_price}</p>
-          {/* Add other bid details here */}
+          <p>
+            <strong>Description:</strong> {bid.bid_description}
+          </p>
+          <p>
+            <strong>Starting Price:</strong> ${bid.starting_price}
+          </p>
+          <p>
+            <strong>Current Highest Bid:</strong> $
+            {bid.highest_bid || "No bids yet"}
+          </p>
+          <p>
+            <strong>Highest Bidder:</strong>{" "}
+            {bid.highest_bidder || "No bids yet"}
+          </p>
+          <p>
+            <strong>Category:</strong> {categoryName}
+          </p>
+
+          <div className="bid-form">
+            <input
+              type="number"
+              value={bidAmount}
+              onChange={(e) => setBidAmount(e.target.value)}
+              placeholder="Enter your bid"
+            />
+            <button onClick={handleBid} className="place-bid-btn">
+              Place Bid
+            </button>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+          </div>
         </div>
       ) : (
         <p className="loading">Loading...</p>

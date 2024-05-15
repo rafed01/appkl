@@ -20,5 +20,5 @@ export const getUserId = async (e) => {
     const usernow = getCurrentUser();
     const userid = usernow.user_id;
     // console.log("current user =", userid);
-    return userid;
+    return Number(userid);
   };

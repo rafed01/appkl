@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api";
 import "./Bids.css";
-import { Link } from "react-router-dom";
-// Import any necessary images
 
 const Bids = () => {
+  const navigate = useNavigate();
   const [bids, setBids] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchBids();
@@ -38,16 +39,17 @@ const Bids = () => {
   };
 
   const viewProduct = (id) => {
-    // Implement the logic to navigate to the single product page using React Router
-    alert("View Product:" + id);
+    navigate(`/bids/${id}`);
   };
 
   const handleCategoryClick = (categoryId) => {
     setSelectedCategory(categoryId);
+    setIsSidebarOpen(false); // Close the sidebar when a category is selected
   };
 
   const handleResetFilter = () => {
     setSelectedCategory(null);
+    setIsSidebarOpen(false); // Close the sidebar when resetting filter
   };
 
   const filteredBids = selectedCategory
@@ -56,37 +58,54 @@ const Bids = () => {
 
   return (
     <div className="container">
-      <div className="bids-page">
-        <div className="filter-card">
-          <h3 className="filter-title">Shop By Categories</h3>
-          <ul className="ps-0">
-            <li onClick={handleResetFilter}>All</li>
-            {categories.map((category) => (
-              <li key={category.id} onClick={() => handleCategoryClick(category.id)}>
-                {category.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="bids-list">
-          {filteredBids.map((bid) => (
-            <div key={bid.id} className="bid-item">
-              {/* Replace the img src with the actual bid image */}
-              <img src={bid.bid_image1} alt={bid.bid_name} className="img-fluid" />
-              <h2>{bid.bid_name}</h2>
-              <p>Description: {bid.bid_description}</p>
-              <p>Starting Price: ${bid.starting_price}</p>
-              <p>Category: {getCategoryName(bid.bid_category)}</p>
-              {/* Additional content for each bid */}
-              <div className="bid-item">
-                {/* Other bid item content */}
-                <Link to={`/bids/${bid.id}`} className="view-product-btn">
-                View Product
-              </Link>
-              </div>
-            </div>
+      <button
+        className="toggle-sidebar-btn"
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      >
+        {isSidebarOpen ? "Close Filters" : "Open Filters"}
+      </button>
+      <div className={`filter-card ${isSidebarOpen ? "open" : ""}`}>
+        <h3 className="filter-title">Shop By Categories</h3>
+        <ul>
+          <li onClick={handleResetFilter}>All</li>
+          {categories.map((category) => (
+            <li
+              key={category.id}
+              onClick={() => handleCategoryClick(category.id)}
+            >
+              {category.name}
+            </li>
           ))}
-        </div>
+        </ul>
+      </div>
+      <div className="bids-list">
+        {filteredBids.map((bid) => (
+          <div key={bid.id} className="bid-item">
+            <img
+              src={bid.bid_image1}
+              alt={bid.bid_name}
+              className="img-fluid"
+            />
+            <h2 className="bid-item h2">{bid.bid_name}</h2>
+            <p className="bid-item p">Description: {bid.bid_description}</p>
+            <p>Starting Price: ${bid.starting_price}</p>
+            <p>Category: {getCategoryName(bid.bid_category)}</p>
+            <p>
+              <strong>Current Highest Bid:</strong> $
+              {bid.highest_bid || "No bids yet"}
+            </p>
+            <p>
+              <strong>Highest Bidder:</strong>{" "}
+              {bid.highest_bidder || "No bids yet"}
+            </p>
+            <button
+              onClick={() => viewProduct(bid.id)}
+              className="view-product-btn"
+            >
+              View Product
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );

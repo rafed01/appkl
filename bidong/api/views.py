@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
-from .models import Item, Bid, ItemImage, Category, UserInfo, Contact
-from .serializers import ItemSerializer, BidSerializer, ItemImageSerializer,CategorySerializer, UserInfoSerializer, ContactSerializer
+from .models import Item, Bid, ItemImage, Category, UserInfo, Contact, UserBid
+from .serializers import ItemSerializer, BidSerializer, ItemImageSerializer,CategorySerializer, UserInfoSerializer, ContactSerializer, UserBidSerializer
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -11,6 +11,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -33,7 +35,7 @@ class ItemViewSet(viewsets.ModelViewSet):
 class BidViewSet(viewsets.ModelViewSet):
     queryset = Bid.objects.all()
     serializer_class = BidSerializer
-    permission_classes = []
+    permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -49,11 +51,14 @@ class ItemImageViewSet(viewsets.ModelViewSet):
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = []
+    permission_classes = [AllowAny]
 
 class UserInfoViewset(viewsets.ModelViewSet):
-    queryset = UserInfo.objects.all()
     serializer_class = UserInfoSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return UserInfo.objects.filter(creator=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
@@ -64,3 +69,23 @@ class ContactViewSet(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
     permission_classes = []
+
+
+class UserBidViewSet(viewsets.ModelViewSet):
+    queryset = UserBid.objects.all()
+    serializer_class = UserBidSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        bid_id = request.data.get('bid')
+        amount = request.data.get('amount')
+        
+        bid = Bid.objects.get(id=bid_id)
+        
+        if amount and float(amount) > bid.starting_price:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"error": "Bid amount must be greater than the starting price."}, status=status.HTTP_400_BAD_REQUEST)

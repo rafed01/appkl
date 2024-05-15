@@ -11,7 +11,6 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
-import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import "./index.css";
 import Navbar from "./components/Navbar/Navbar";
@@ -19,13 +18,18 @@ import About from "./components/About/About";
 import Contact from "./components/Contact/Contact";
 import Bids from "./Bids/Bids";
 import Footer from "./components/Footer/Footer";
-import SingleProduct from "./pages/SingleProduct";
 import BidDetails from "./pages/BidDeatails";
+import UserInfo from "./pages/UserInfo";
+import UploadUserInfo from "./pages/UploadUserInfo";
+import UploadItem from "./pages/UploadItem";
+
 
 function Logout() {
   localStorage.clear();
   return <Navigate to="/login" />;
 }
+
+
 
 function SingnupAndLogout() {
   localStorage.clear();
@@ -40,29 +44,30 @@ const App = () => {
 
         <Routes>
           <Route path="/signup" element={<SingnupAndLogout />} />
+          <Route path="/upload-info" element={<UploadUserInfo/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/about" element={<About />} />
-          <Route
-            path="/bids"
-            element={
-             
-                <Bids />
-            }
-          />
+          <Route path="/bids" element={<Bids />} />
           <Route path="/contact" element={<Contact />} />
-          <Route exact path="/" element={<Home />} />
-          <Route path="/bids/:id" element={<BidDetails />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/bids/:id" element={<ProtectedRoute><BidDetails /></ProtectedRoute>} />
+          <Route path="/item" element={ <ProtectedRoute>
+                <UploadItem />
+              </ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
+          
           <Route
-            path="/profile"
+            path="/user"
             element={
               <ProtectedRoute>
-                <Profile />
+                <UserInfo />
               </ProtectedRoute>
             }
           />
+
         </Routes>
+        <Footer />
       </div>
     </Router>
   );
