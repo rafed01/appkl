@@ -15,7 +15,7 @@ const BidDetails = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   if (!currentUser) {
-    navigate("/login")
+    navigate("/login", { state: { from: location } })
   }
 
   useEffect(() => {

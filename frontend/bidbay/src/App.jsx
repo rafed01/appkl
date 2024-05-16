@@ -23,9 +23,11 @@ import UserInfo from "./pages/UserInfo";
 import UploadUserInfo from "./pages/UploadUserInfo";
 import UploadItem from "./pages/UploadItem";
 import UserBids from "./pages/UserBids";
+import FetchUserIdComponent from "./components/FetchUserId";
 
 function Logout() {
   localStorage.clear();
+
   return <Navigate to="/login" />;
 }
 
@@ -39,7 +41,7 @@ const App = () => {
     <Router>
       <div>
         <Navbar />
-
+        <FetchUserIdComponent/>
         <Routes>
           <Route path="/signup" element={<SingnupAndLogout />} />
           <Route path="/upload-info" element={<UploadUserInfo />} />

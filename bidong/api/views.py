@@ -21,6 +21,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action, api_view, permission_classes
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+from rest_framework import status
+
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -83,15 +85,20 @@ class ContactViewSet(viewsets.ModelViewSet):
 
 
 class UserBidViewSet(viewsets.ModelViewSet):
-    queryset = UserBid.objects.all()
     serializer_class = UserBidSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        user_id = self.request.query_params.get('user')
+        if user_id:
+            return UserBid.objects.filter(user=user_id)
+        return UserBid.objects.none()  # Return an empty queryset if user ID is not provided
 
     def create(self, request, *args, **kwargs):
         bid_id = request.data.get('bid')
         amount = request.data.get('amount')
         
-        bid = Bid.objects.get(id=bid_id)
+        bid = get_object_or_404(Bid, id=bid_id)
         
         if amount and float(amount) > bid.starting_price:
             serializer = self.get_serializer(data=request.data)
@@ -111,3 +118,11 @@ def get_user_details(request):
         'username': user.username,
         # Add other fields as necessary
     })
+
+
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user_id = request.user.id
+        return Response({'user_id': user_id})

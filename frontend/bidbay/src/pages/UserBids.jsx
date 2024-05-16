@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link } from "react-router-dom";
 import api from "../api";
-import useCurrentUser from "../hooks/UseCurrentUser";
-import "../styles/UserBids.css"
+import "../styles/UserBids.css";
+import { USER_ID } from "../constants";
 
 const UserBids = () => {
-  const currentUser = useCurrentUser(); // Using custom hook to fetch current user
   const [userBids, setUserBids] = useState([]);
   const [loading, setLoading] = useState(true);
   const [bidsMap, setBidsMap] = useState({});
 
   useEffect(() => {
-    if (currentUser) {
-      fetchUserBids(currentUser.id);
+    const userId = localStorage.getItem(USER_ID); // Retrieve user ID from local storage
+    if (userId) {
+      fetchUserBids(userId);
     }
-  }, [currentUser]);
+  }, []);
 
   useEffect(() => {
     fetchAllBids();
@@ -22,7 +22,7 @@ const UserBids = () => {
 
   const fetchAllBids = async () => {
     try {
-      const response = await api.get("/api/bids");
+      const response = await api.get("/api/bids/");
       const bids = response.data;
       const bidsMap = {};
       bids.forEach((bid) => {
@@ -37,10 +37,12 @@ const UserBids = () => {
   const fetchUserBids = async (userId) => {
     try {
       const response = await api.get(`/api/user-bids/?user=${userId}`);
+      console.log("User Bids Response:", response.data); // Log the response data
       setUserBids(response.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching user bids:", error);
+      setLoading(false); // Set loading to false even in case of an error
     }
   };
 
