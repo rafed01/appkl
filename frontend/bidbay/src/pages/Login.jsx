@@ -1,41 +1,36 @@
+import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import api from "../api";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import "../styles/Form.css";
 import LoadingIndicator from "../components/LoadingIndicator";
 
-import React from "react";
+function Login() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-
-function Login(){
-const [username, setUsername] = useState("");
-const [password, setPassword] = useState("");
-const [loading, setLoading] = useState(false);
-const navigate = useNavigate();
-
-
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
 
     try {
       const res = await api.post("/api/token/", { username, password });
-      
-        localStorage.setItem(ACCESS_TOKEN, res.data.access);
-        localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-      
-        
-        navigate("/bids");
-      }
-      
-     catch (error) {
+
+      localStorage.setItem(ACCESS_TOKEN, res.data.access);
+      localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+
+      // Redirect to the previous page or home if no previous page
+      const previousPath = location.state?.from?.pathname || "/";
+      navigate(previousPath);
+    } catch (error) {
       alert(error);
     } finally {
       setLoading(false);
     }
   };
-
 
   return (
     <form onSubmit={handleSubmit} className="form-container">
@@ -47,7 +42,6 @@ const handleSubmit = async (e) => {
         onChange={(e) => setUsername(e.target.value)}
         placeholder="Username"
       />
-
       <input
         className="form-input"
         type="password"
@@ -56,12 +50,11 @@ const handleSubmit = async (e) => {
         placeholder="Password"
       />
       {loading && <LoadingIndicator />}
-      <button className="form-button" type="submit">Login
+      <button className="form-button" type="submit">
+        Login
       </button>
     </form>
   );
-
 }
-
 
 export default Login;

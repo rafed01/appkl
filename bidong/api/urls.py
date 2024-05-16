@@ -2,7 +2,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
-from .views import UserInfoViewset, UserBidViewSet
+from .views import UserInfoViewset, UserBidViewSet, get_user_details
 
 router = DefaultRouter()
 router.register(r'items', views.ItemViewSet)
@@ -14,5 +14,7 @@ router.register(r'userinfo', UserInfoViewset, basename='userinfo')
 router.register(r'contact', views.ContactViewSet)
 
 urlpatterns = [
+    path('user/', get_user_details, name='user-details'),
+
     path('', include(router.urls)),
 ]

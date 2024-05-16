@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN, CURRENT_USER } from "../constants";
+import { CURRENT_USER } from "../constants";
 
 
 

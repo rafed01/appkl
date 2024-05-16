@@ -2,26 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api";
 import "../styles/BidDetails.css"; // Adjust the path if necessary
-import { CURRENT_USER } from "../constants";
-import { getUserId } from "../components/UserAuth";
+import useCurrentUser from "../hooks/UseCurrentUser";
 
 const BidDetails = () => {
-  const  user = getUserId();
+  const currentUser = useCurrentUser(); // Using custom hook to fetch current user
   const { id } = useParams();
   const [bid, setBid] = useState(null);
   const [categoryName, setCategoryName] = useState("");
   const [bidAmount, setBidAmount] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-console.log(user);
-  
-
-  
-
 
   useEffect(() => {
     fetchBidDetails();
   }, []);
-
 
   const fetchBidDetails = async () => {
     try {
@@ -46,20 +39,21 @@ console.log(user);
 
   const handleBid = async () => {
     try {
-      // Get the user ID from the token
-      const userId = await getUserId();
-      console.log(userId)
-      
-      if (!userId) {
-        console.error('User ID not found in token.');
+      // Check if the current user object exists
+      if (!currentUser) {
+        console.error('User information not found.');
         return;
       }
-  
-      // if (bidAmount <= bid.starting_price) {
-      //   setErrorMessage("Your bid must be higher than the starting price.");
-      //   return;
-      // }
-  
+
+      // Extract user ID from the currentUser object
+      const userId = currentUser.id;
+      
+      // Check if userId is valid
+      if (!userId) {
+        console.error('User ID not found.');
+        return;
+      }
+
       const response = await api.post("/api/user-bids/", {
         bid: bid.id,
         amount: bidAmount,
@@ -74,7 +68,6 @@ console.log(user);
       setErrorMessage("Failed to place bid. Please try again.");
     }
   };
-  
 
   return (
     <div className="container">

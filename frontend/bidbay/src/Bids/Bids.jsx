@@ -86,10 +86,10 @@ const Bids = () => {
               alt={bid.bid_name}
               className="img-fluid"
             />
-            <h2 className="bid-item h2">{bid.bid_name}</h2>
-            <p className="bid-item p">Description: {bid.bid_description}</p>
-            <p>Starting Price: ${bid.starting_price}</p>
-            <p>Category: {getCategoryName(bid.bid_category)}</p>
+            <h2 >{bid.bid_name}</h2>
+            <p><strong>Description: {bid.bid_description}</strong></p>
+            <p><strong>Starting Price: ${bid.starting_price}</strong></p>
+            <p><strong>Category: {getCategoryName(bid.bid_category)}</strong></p>
             <p>
               <strong>Current Highest Bid:</strong> $
               {bid.highest_bid || "No bids yet"}
