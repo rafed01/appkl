@@ -21,10 +21,10 @@ function Login() {
 
       localStorage.setItem(ACCESS_TOKEN, res.data.access);
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-
       // Redirect to the previous page or home if no previous page
       const previousPath = location.state?.from?.pathname || "/";
       navigate(previousPath);
+      window.location.reload();
     } catch (error) {
       alert(error);
     } finally {

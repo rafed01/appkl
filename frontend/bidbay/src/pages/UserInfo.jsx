@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
+import { Link } from "react-router-dom";
+import "../styles/UserInfo.css"
 
 const UserInfo = () => {
   const navigate = useNavigate();
@@ -54,7 +56,7 @@ const UserInfo = () => {
       <h1>{userInfo.fullname} Profile Overview</h1>
       {isEditing ? (
         <form onSubmit={handleSubmit}>
-          <div className="user-info">
+          <div className="user-info-form">
             <label>
               <strong>Phone Number:</strong>
               <input
@@ -138,6 +140,7 @@ const UserInfo = () => {
           <button onClick={() => setIsEditing(true)}>Edit</button>
         </div>
       )}
+      <Link className="link-to-bids" to="/user-bids">See Your current bids!</Link>
     </div>
   );
 };

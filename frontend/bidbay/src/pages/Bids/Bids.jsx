@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api";
+import api from "../../api";
 import "./Bids.css";
+
 
 const Bids = () => {
   const navigate = useNavigate();
@@ -86,10 +87,16 @@ const Bids = () => {
               alt={bid.bid_name}
               className="img-fluid"
             />
-            <h2 >{bid.bid_name}</h2>
-            <p><strong>Description: {bid.bid_description}</strong></p>
-            <p><strong>Starting Price: ${bid.starting_price}</strong></p>
-            <p><strong>Category: {getCategoryName(bid.bid_category)}</strong></p>
+            <h2>{bid.bid_name}</h2>
+            <p>
+              <strong>Description: {bid.bid_description}</strong>
+            </p>
+            <p>
+              <strong>Starting Price: ${bid.starting_price}</strong>
+            </p>
+            <p>
+              <strong>Category: {getCategoryName(bid.bid_category)}</strong>
+            </p>
             <p>
               <strong>Current Highest Bid:</strong> $
               {bid.highest_bid || "No bids yet"}

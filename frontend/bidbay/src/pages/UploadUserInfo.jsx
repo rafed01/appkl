@@ -1,7 +1,6 @@
 // UploadUserInfo.js
 import React, { useState } from "react";
 import api from "../api";
-import { getUserId } from "../components/UserAuth";
 import "../styles/Form.css"
 import { useNavigate } from "react-router-dom";
 

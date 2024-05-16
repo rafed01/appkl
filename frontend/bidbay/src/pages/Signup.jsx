@@ -3,8 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Form.css";
 import LoadingIndicator from "../components/LoadingIndicator";
-import { ACCESS_TOKEN, REFRESH_TOKEN, CURRENT_USER, HAS_INFO } from "../constants";
-import { saveCurrentUser } from "../components/UserAuth";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import { jwtDecode } from "jwt-decode";
 import React from "react";
 
@@ -30,8 +29,7 @@ function Signup() {
       localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
 
       // Decode the token and save the current user
-      const decodedToken = jwtDecode(res.data.access);
-      saveCurrentUser(decodedToken);
+      
 
       // Redirect to the desired page after login
       navigate("/user");

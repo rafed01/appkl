@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 
 function ProtectedRoute({ children }) {
   const [isAuthorized, setIsAuthorized] = useState(null);
-  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {

@@ -3,14 +3,20 @@ import { useParams } from "react-router-dom";
 import api from "../api";
 import "../styles/BidDetails.css"; // Adjust the path if necessary
 import useCurrentUser from "../hooks/UseCurrentUser";
+import { useNavigate } from "react-router-dom";
 
 const BidDetails = () => {
+  const navigate = useNavigate();
   const currentUser = useCurrentUser(); // Using custom hook to fetch current user
   const { id } = useParams();
   const [bid, setBid] = useState(null);
   const [categoryName, setCategoryName] = useState("");
   const [bidAmount, setBidAmount] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  if (!currentUser) {
+    navigate("/login")
+  }
 
   useEffect(() => {
     fetchBidDetails();
