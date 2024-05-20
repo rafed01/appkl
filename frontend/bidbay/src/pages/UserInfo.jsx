@@ -8,11 +8,10 @@ const UserInfo = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [profileImage, setProfileImage] = useState(null); // State for profile image
 
   useEffect(() => {
-  
-      fetchUserInfo();
-   
+    fetchUserInfo();
   }, []);
 
   const fetchUserInfo = async () => {
@@ -21,7 +20,7 @@ const UserInfo = () => {
       if (response.data.length > 0) {
         setUserInfo(response.data[0]);
       } else {
-        navigate("/upload-info"); 
+        navigate("/upload-info");
       }
     } catch (error) {
       console.error("Error fetching user info:", error);
@@ -36,10 +35,27 @@ const UserInfo = () => {
     }));
   };
 
+  const handleImageChange = (e) => {
+    setProfileImage(e.target.files[0]); // Update profile image state
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.put(`/api/userinfo/${userInfo.id}/`, userInfo);
+      const formData = new FormData();
+      formData.append("profile_image", profileImage); // Append profile image to FormData
+      formData.append("phone", userInfo.phone);
+      formData.append("adress", userInfo.adress);
+      formData.append("city", userInfo.city);
+      formData.append("email", userInfo.email);
+      formData.append("zip", userInfo.zip);
+      formData.append("state", userInfo.state);
+
+      const response = await api.put(`/api/userinfo/${userInfo.id}/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       setUserInfo(response.data);
       setIsEditing(false);
     } catch (error) {
@@ -57,6 +73,14 @@ const UserInfo = () => {
       {isEditing ? (
         <form onSubmit={handleSubmit}>
           <div className="user-info-form">
+          <label>
+              <strong>Profile Image:</strong>
+              <input
+                type="file"
+                name="profile_image"
+                onChange={handleImageChange}
+              />
+            </label>
             <label>
               <strong>Phone Number:</strong>
               <input
@@ -114,11 +138,17 @@ const UserInfo = () => {
           </div>
           <button type="submit">Save</button>
           <button type="button" onClick={() => setIsEditing(false)}>
+            
             Cancel
           </button>
+          <button onClick={() => setIsEditing(true)}>Edit Profile Picture</button>
         </form>
       ) : (
         <div className="user-info">
+          <p>
+            <strong>Profile Image:</strong>{" "}
+            <img src={userInfo.profile_image} alt="Profile" />
+          </p>
           <p>
             <strong>Phone Number:</strong> {userInfo.phone}
           </p>
@@ -144,5 +174,6 @@ const UserInfo = () => {
     </div>
   );
 };
+
 
 export default UserInfo;
