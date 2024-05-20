@@ -44,6 +44,7 @@ class Bid(models.Model):
     bid_image5 = models.ImageField(upload_to='bid_images/', default=None, null=True)
     starting_price = models.DecimalField(max_digits=10, decimal_places=3, default=0)
     bid_category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='bids', null=True, blank=True)
+    auction_entrance_price = models.DecimalField(max_digits=10, decimal_places=3, default=0)
 
     def __str__(self):
         return f"{self.bid_name}"
@@ -72,7 +73,6 @@ class UserBid(models.Model):
 
 
 
-
 class UserInfo(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     phone = models.CharField(max_length=50, default="+216")
@@ -82,10 +82,10 @@ class UserInfo(models.Model):
     email = models.CharField(max_length=200, default="flen@mailbox")
     zip = models.CharField(max_length=50, default="1234")
     state = models.CharField(max_length=50, default="state affairs XD")
+    profile_image = models.ImageField(upload_to='profile_images/', default='../media/profile_pic.png')
 
     def __str__(self):
-         return f"{self.fullname}"
-
+        return f"{self.fullname}"
 class Contact(models.Model):
     c_name = models.CharField(default="flen ben foulen", max_length=50)
     c_email = models.CharField(default="flen@mailbox", max_length=100)
